@@ -16,7 +16,6 @@ class Authenticator():
         App ID(Aylien)
         Key(Aylien)
         """
-        fileLocation
         try:
             f = open(fileLocation)
         except FileNotFoundError:
@@ -24,6 +23,8 @@ class Authenticator():
         self.apiKeys = []
         for line in f:
             self.apiKeys.append(line)
+        #Strip the new line charecters from end
+        self.apiKeys = [x.strip() for x in self.apiKeys]
         if len(self.apiKeys) != 6:
             print("Keys not stored in file correctly, please make sure they are in the form\n"
                   "Consumer Key (API Key)(Twitter)\n"

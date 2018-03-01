@@ -17,8 +17,9 @@ class TweetGetter(StreamListener):
         """
         self.counter = 0
         self.maxTweets = maxTweets
-        self.TwitAuthenticator = authenticator.Authenticator.TwitAuthenticator()
-        self.AyAuthenticator = authenticator.Authenticator.AyAuthenticaor()
+        self.Authenticator = authenticator.Authenticator("keys.txt")
+        self.TwitAuthenticator = self.Authenticator.TwitAuthenticator()
+        self.AyAuthenticator = self.Authenticator.AyAuthenticaor()
 
         """
         Why the words file is needed:
