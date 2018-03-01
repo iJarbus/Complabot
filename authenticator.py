@@ -1,7 +1,7 @@
 from aylienapiclient import textapi
 from tweepy import OAuthHandler
 
-class authenticator():
+class Authenticator():
     """
     This is a class that handles all the authentication for logging into the Aylien api as well as the twitter API
     """
