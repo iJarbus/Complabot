@@ -54,7 +54,11 @@ class TweetGetter(StreamListener):
         print(status)
 
     def streamTweets(self):
-
+        """
+        This is a function that streams tweets using the twitter api, the logic of what is done with each tweet is
+        defined in the on_data function.
+        :return: None
+        """
         stream = Stream(self.TwitAuthenticator, self)
         stream.filter(languages=[self.languageToTarget], track=self.words)
 
