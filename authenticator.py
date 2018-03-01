@@ -1,4 +1,4 @@
-from aylienapiclient import textapi
+import watson_developer_cloud
 from tweepy import OAuthHandler
 
 class Authenticator():
@@ -34,16 +34,17 @@ class Authenticator():
                   "App ID(Aylien\n"
                   "Key(Aylien)\n")
 
-    def AyAuthenticaor(self):
+    def WatsonToneAuth(self):
         """
-        This is a function that creates an ayClient instance and authenticates it
-        :return: returns an authenticated ayClient object
+        creates an authenticated ToneAnalyzer for the IBM Watson cloud API
+        :return: Autherised Tone Analyser
         """
-        try:
-            ayClient = textapi.Client(self.apiKeys[4], self.apiKeys[5])
-        except Exception:
-            print("Something went wrong trying to authenticate with Aylien")
-        return ayClient
+        tone_analyzer = watson_developer_cloud.ToneAnalyzerV3(
+            version='2017-09-21',
+            username=self.apiKeys[4],
+            password=self.apiKeys[5]
+        )
+        return tone_analyzer
 
     def TwitAuthenticator(self):
         """
