@@ -1,9 +1,8 @@
 from tweepy.streaming import StreamListener
 from tweepy import Stream
-import tweepy
 import json
 import authenticator
-import csv
+
 
 class TweetGetter(StreamListener):
     """
@@ -76,7 +75,6 @@ class TweetGetter(StreamListener):
             self.counter += 1
             return True
         else:
-            print("All tweets gathered")
             return False
 
     def on_error(self, status):
@@ -90,5 +88,3 @@ class TweetGetter(StreamListener):
         """
         stream = Stream(self.TwitAuthenticator, self)
         stream.filter(languages=[self.languageToTarget], track=self.words)
-
-

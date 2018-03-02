@@ -3,7 +3,7 @@ from tweepy import OAuthHandler
 
 class Authenticator():
     """
-    This is a class that handles all the authentication for logging into the Aylien api as well as the twitter API
+    This is a class that handles all the authentication for logging into the Watson tone api as well as the twitter API
     """
     def __init__(self, fileLocation):
         """
@@ -13,8 +13,8 @@ class Authenticator():
         Consumer Secret (API Secret)(Twitter)
         Access Token(Twitter)
         Access Token Secret(Twitter)
-        App ID(Aylien)
-        Key(Aylien)
+        Username(Watson)
+        Password(Watson)
         """
         try:
             f = open(fileLocation)
@@ -31,8 +31,8 @@ class Authenticator():
                   "Consumer Secret (API Secret)(Twitter)\n"
                   "Access Token(Twitter)\n"
                   "Access Token Secret(Twitter)\n"
-                  "App ID(Aylien\n"
-                  "Key(Aylien)\n")
+                  "Username(Watson)\n"
+                  "Password(Watson)\n")
 
     def WatsonToneAuth(self):
         """
