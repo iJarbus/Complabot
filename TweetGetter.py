@@ -3,6 +3,7 @@ from tweepy import Stream
 import tweepy
 import json
 import authenticator
+import csv
 
 class TweetGetter(StreamListener):
     """
@@ -19,7 +20,8 @@ class TweetGetter(StreamListener):
         self.maxTweets = maxTweets
         self.Authenticator = authenticator.Authenticator("keys.txt")
         self.TwitAuthenticator = self.Authenticator.TwitAuthenticator()
-        self.AyAuthenticator = self.Authenticator.AyAuthenticaor()
+        self.WatonsAuthenticator = self.Authenticator.WatsonToneAuth()
+        self.tweetFile = open("tweets.csv", 'w')
 
         """
         Why the words file is needed:
@@ -35,15 +37,42 @@ class TweetGetter(StreamListener):
         self.languageToTarget = "en" #This must be a ISO 639-1 language code, Wikipedia has a good list.
 
     def on_data(self, data):
+        """
+        This is the function that handles what is done when a tweet is streamed in
+        :param data: This is the tweet, it is in the form of a JSON object, the structure of which is defined at:
+        https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/intro-to-tweet-json
+        :return: True or False, True if the streaming should continue, False to stop it
+        """
         tweet = json.loads(data)
         try:
+            #if the tweet is a retweet skip over it.
+            if tweet['text'][0:2] == "RT":
+                return True
             print(tweet['text'])
-            print(tweet['user']['name'])
         except KeyError:
-            print("Some data is missing, skip it")
+            #if we can't access all the data just skip over it and request again without incrementing counter
+            return True
+            pass
+        try:
+            TweetText = tweet['extended_text']['full_text']
+        except KeyError:
+            TweetText = tweet['text']
+
+        #get the tone analysis from Watson
+        Tone = self.WatonsAuthenticator.tone(TweetText, content_type='text/plain')
+
+        #loop through the returned emotions and if sadness store the data in the .csv file
+        try:
+            for emotions in Tone['document_tone']['tones']:
+                if emotions['tone_id'] == "sadness":
+                    row = tweet['user']['screen_name'] + "," + str(emotions['score']) + "\n"
+                    self.tweetFile.write(row)
+        #If there is a key error just move on to the next tweet
+        except KeyError:
+            return True
+
+        #This is the control logic for how many tweets to get
         if self.counter < self.maxTweets:
-            print(self.counter)
-            print("-------------------------------------------------------")
             self.counter += 1
             return True
         else:
