@@ -21,6 +21,7 @@ class TweetGetter(StreamListener):
         self.TwitAuthenticator = self.Authenticator.TwitAuthenticator()
         self.WatonsAuthenticator = self.Authenticator.WatsonToneAuth()
         self.tweetFile = open("tweets.csv", 'w')
+        self.DoneStreaming = False
 
         """
         Why the words file is needed:
@@ -47,7 +48,6 @@ class TweetGetter(StreamListener):
             #if the tweet is a retweet skip over it.
             if tweet['text'][0:2] == "RT":
                 return True
-            print(tweet['text'])
         except KeyError:
             #if we can't access all the data just skip over it and request again without incrementing counter
             return True
@@ -75,6 +75,8 @@ class TweetGetter(StreamListener):
             self.counter += 1
             return True
         else:
+            self.DoneStreaming = True
+            self.tweetFile.close()
             return False
 
     def on_error(self, status):
@@ -87,4 +89,4 @@ class TweetGetter(StreamListener):
         :return: None
         """
         stream = Stream(self.TwitAuthenticator, self)
-        stream.filter(languages=[self.languageToTarget], track=self.words)
+        stream.filter(languages=[self.languageToTarget], track=self.words, async=True)
